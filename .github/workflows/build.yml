@@ -65,18 +65,16 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleRelease --no-daemon
       
-      - name: Find APK files
+      - name: Find all APK files
         run: |
-          echo "=== Searching for APK files ==="
-          find . -name "*.apk" -type f
+          echo "=== Searching for ALL APK files ==="
+          find . -name "*.apk" -type f -exec ls -lh {} \;
           echo "=== End search ==="
       
-      - name: Upload APK
+      - name: Upload all APK files
         uses: actions/upload-artifact@v4
         with:
-          name: Telegram-Release
-          path: |
-            TMessagesProj/build/outputs/apk/release/*.apk
-            TMessagesProj/build/outputs/apk/standalone/release/*.apk
-          if-no-files-found: warn
+          name: Telegram-APKs
+          path: '**/*.apk'
+          if-no-files-found: error
           retention-days: 7
