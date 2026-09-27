@@ -25,15 +25,18 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
         continue-on-error: true
+        id: setup-sdk
       
       - name: Install Android SDK components manually
-        if: steps.setup-android.outcome != 'success'
+        if: steps.setup-sdk.outcome != 'success'
         run: |
-          sudo mkdir -p /usr/local/lib/android/sdk/cmdline-tools/latest
+          sudo rm -rf /usr/local/lib/android/sdk/cmdline-tools/latest/*
+          
           cd /tmp
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
           unzip -q commandlinetools-linux-11076708_latest.zip
-          mv cmdline-tools/* /usr/local/lib/android/sdk/cmdline-tools/latest/
+          
+          cp -r cmdline-tools/* /usr/local/lib/android/sdk/cmdline-tools/latest/
           rm -rf cmdline-tools commandlinetools-linux-11076708_latest.zip
           
           export ANDROID_HOME=/usr/local/lib/android/sdk
